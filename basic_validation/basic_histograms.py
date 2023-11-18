@@ -14,7 +14,7 @@ neg_particle_etas = []
 neg_particle_phis = []
 
 def mev_to_gev(mev):				# pT values are in MeV,
-	return mev * 10**-3			# converting to GeV
+	return mev * 10**-3			    # converting to GeV
 
 num_particles = 0
 
@@ -38,50 +38,55 @@ with pyhepmc.open(hepmc_file) as f:
                 neg_particle_phis.append(n_phi)
 
 # HISTOGRAM STUFF
-
-range_min = 0
-range_max = 1000 
+tags = ['Positively charged smuons', 'Negatively charged smuons']
 
 # --- pT ---
-plt.hist(pos_particle_pts, range=(range_min, range_max), histtype='step', label='Positively charged smuons')
-plt.hist(neg_particle_pts, range=(range_min, range_max), histtype='step', label='Negatively charged smuons')
+pT_num_bins = 20
+pTs = [pos_particle_pts, neg_particle_pts]
+
+plt.hist(pTs, bins=pT_num_bins, histtype='bar', label=tags, stacked=True)
+#plt.hist(neg_particle_pts, bins=pT_num_bins, histtype='step', label='Negatively charged smuons', stacked=True)
 
 plt.xlabel('pT [GeV]')
 plt.ylabel('Number of Smuons')
 plt.legend()
 plt.title('Smuon pT')
 
-plt.grid()
+plt.grid(color='c')
 
 plt.savefig('Smuon_pT.pdf', bbox_inches='tight')
 plt.savefig('Smuon_pT.png', bbox_inches='tight')
 plt.clf()
 
 # --- eta ---
-plt.hist(pos_particle_etas, histtype='step', label='Positively charged smuons')
-plt.hist(neg_particle_etas, histtype='step', label='Negatively charged smuons')
+etas = [pos_particle_etas, neg_particle_etas]
+plt.hist(etas, histtype='bar', label=tags, stacked=True)
+#plt.hist(neg_particle_etas, histtype='step', label='Negatively charged smuons', stacked=True)
 
 plt.xlabel('$\eta$')
 plt.ylabel('Number of Smuons')
 plt.legend()
 plt.title('Smuon $\eta$')
 
-plt.grid()
+plt.grid(color='c')
 
 plt.savefig('Smuon_eta.pdf', bbox_inches='tight')
 plt.savefig('Smuon_eta.png', bbox_inches='tight')
 plt.clf()
 
 # --- phi ---
-plt.hist(pos_particle_phis, histtype='step', label='Positively charged smuons')
-plt.hist(neg_particle_phis, histtype='step', label='Negatively charged smuons')
+phi_range = ( -(np.pi), np.pi )
+phis = [pos_particle_phis, neg_particle_phis]
+
+plt.hist(phis, range=phi_range, histtype='bar', label=tags, stacked=True)
+#plt.hist(neg_particle_phis, range=phi_range, histtype='step', label='Negatively charged smuons', stacked=True)
 
 plt.xlabel('$\phi$')
 plt.ylabel('Number of Smuons')
 plt.legend()
 plt.title('Smuon $\phi$')
 
-plt.grid()
+plt.grid(color='c')
 
 plt.savefig('Smuon_phi.pdf', bbox_inches='tight')
 plt.savefig('Smuon_phi.png', bbox_inches='tight')
