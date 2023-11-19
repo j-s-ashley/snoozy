@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Change run number
-hepmc_file = "../../run_data/run_13/Events/run_01/tag_1_pythia8_events.hepmc"
+hepmc_file = "../../run_data/run_15/Events/run_01/tag_1_pythia8_events.hepmc"
 
 pos_particle_pts = []
 pos_particle_etas = []
@@ -21,21 +21,22 @@ num_particles = 0
 with pyhepmc.open(hepmc_file) as f:
     for i, event in enumerate(f):
         for particle in event.particles:
-            num_particles += 1
-            if particle.pid == 2000013 and particle.status == 1:
-                p_pt = mev_to_gev( particle.momentum.pt() )
-                pos_particle_pts.append(p_pt)
-                p_eta = particle.momentum.eta()
-                pos_particle_etas.append(p_eta)
-                p_phi = particle.momentum.phi()
-                pos_particle_phis.append(p_phi)
-            elif particle.pid == -2000013 and particle.status == 1:
-                n_pt = mev_to_gev( particle.momentum.pt() )
-                neg_particle_pts.append(n_pt)
-                n_eta = particle.momentum.eta()
-                neg_particle_etas.append(n_eta)
-                n_phi = particle.momentum.phi()
-                neg_particle_phis.append(n_phi)
+            if abs(particle.pid) == 2000013:
+                num_particles += 1
+                if particle.pid == 2000013 and particle.status == 22:
+                    p_pt = mev_to_gev( particle.momentum.pt() )
+                    pos_particle_pts.append(p_pt)
+                    p_eta = particle.momentum.eta()
+                    pos_particle_etas.append(p_eta)
+                    p_phi = particle.momentum.phi()
+                    pos_particle_phis.append(p_phi)
+                elif particle.pid == -2000013 and particle.status == 22:
+                    n_pt = mev_to_gev( particle.momentum.pt() )
+                    neg_particle_pts.append(n_pt)
+                    n_eta = particle.momentum.eta()
+                    neg_particle_etas.append(n_eta)
+                    n_phi = particle.momentum.phi()
+                    neg_particle_phis.append(n_phi)
 
 # HISTOGRAM STUFF
 tags = ['Positively charged smuons', 'Negatively charged smuons']
