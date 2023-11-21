@@ -3,7 +3,36 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Change run number
-hepmc_file = "../../run_data/run_15/Events/run_01/tag_1_pythia8_events.hepmc"
+hepmc_file = "../../run_data/run_13/Events/run_01/tag_1_pythia8_events.hepmc"
+
+with pyhepmc.open(hepmc_file) as f:
+    for all_events in f:
+        pass
+
+# High-efficiency loop over event record
+# See scikit-hep.org/pyhepmc/examples/processing.html (Method 3)
+def get_smuons(event):
+    p = event.numpy.particles
+    i = np.abs(p.pid) == 2000013
+    i &= p.status == 23 # this will ONLY work on run_13 data (see Issue 1)
+    pid = p.pid
+    px = p.px
+    py = p.py
+    pz = p.pz
+    e = p.e
+    return [ [pid[i]], [px[i]], [py[i]], [pz[i]], [e[i]] ]
+
+def mev_to_gev(mev):				# pT values are in MeV,
+	return mev * 10**-3			    # converting to GeV
+
+def get_pT(x, y):
+    return mev_to_gev( np.sqrt( (x * x) + (y * y) ) )
+
+def get_phi(x, y):
+    return np.arctan2(y / x)
+
+def get_eta(z, e):
+    return 0.5 * np.log( (e + z) / (e - z) )
 
 pos_particle_pts = []
 pos_particle_etas = []
@@ -13,30 +42,14 @@ neg_particle_pts = []
 neg_particle_etas = []
 neg_particle_phis = []
 
-def mev_to_gev(mev):				# pT values are in MeV,
-	return mev * 10**-3			    # converting to GeV
-
 num_particles = 0
 
-with pyhepmc.open(hepmc_file) as f:
-    for i, event in enumerate(f):
-        for particle in event.particles:
-            if abs(particle.pid) == 2000013:
-                num_particles += 1
-                if particle.pid == 2000013 and particle.status == 22:
-                    p_pt = mev_to_gev( particle.momentum.pt() )
-                    pos_particle_pts.append(p_pt)
-                    p_eta = particle.momentum.eta()
-                    pos_particle_etas.append(p_eta)
-                    p_phi = particle.momentum.phi()
-                    pos_particle_phis.append(p_phi)
-                elif particle.pid == -2000013 and particle.status == 22:
-                    n_pt = mev_to_gev( particle.momentum.pt() )
-                    neg_particle_pts.append(n_pt)
-                    n_eta = particle.momentum.eta()
-                    neg_particle_etas.append(n_eta)
-                    n_phi = particle.momentum.phi()
-                    neg_particle_phis.append(n_phi)
+smuons = get_smuons(all_events)
+
+# TO DO
+#     Loop over smuons to fill pos_, neg_ lists. 
+#     (Ought to only take one loop)
+#     Look into direct pull for¤0¤0¤0¤0¤0¤0¤0¤0¤0¤0¤0 pT, eta, phi
 
 # HISTOGRAM STUFF
 tags = ['Positively charged smuons', 'Negatively charged smuons']
