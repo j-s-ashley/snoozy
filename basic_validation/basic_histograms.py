@@ -63,13 +63,9 @@ plt.clf()
 
 # --- eta ---
 etas = [pos_particle_etas, neg_particle_etas]
-# weirdly won't work; tried abs and np.abs; trying something more convoluted for ss&gs
 eta_extrema = max( np.abs( np.min(etas) ), np.max(etas) ) 
-# eta_min = 0 - np.min(etas)
-# eta_max = np.max(etas)
-# eta_extrema = np.max( eta_min, eta_max)
 
-eta_bin_width = 16
+eta_bin_width = 1
 eta_num_bins = np.linspace(-eta_extrema, eta_extrema + eta_bin_width, eta_bin_width)
 
 plt.hist(etas, bins=eta_num_bins, histtype='bar', label=tags, stacked=True, edgecolor='black')
@@ -89,7 +85,8 @@ plt.clf()
 phis = [pos_particle_phis, neg_particle_phis]
 
 phi_bin_width = 1 
-phi_num_bins = np.linspace( -(np.pi), np.pi + phi_bin_width, phi_bin_width )
+#phi_num_bins = np.linspace( -(np.pi), np.pi + phi_bin_width, phi_bin_width )
+phi_num_bins = np.linspace( -3.15, 3.15 + phi_bin_width, phi_bin_width )
 
 plt.hist(phis, bins=phi_num_bins, histtype='bar', label=tags, stacked=True, edgecolor='black')
 
@@ -107,4 +104,4 @@ plt.savefig('Smuon_phi.png', bbox_inches='tight')
 print(num_particles,'smuons generated')
 print(np.max(pTs),'max pT')
 print(eta_extrema,'max eta')
-print(np.sum(phis) / num_particles,'average pT')
+print(np.sum(phis) / num_particles,'average phi')
