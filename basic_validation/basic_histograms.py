@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Change run number
-hepmc_file = "../../run_data/run_17/Events/run_01/tag_1_pythia8_events.hepmc"
+hepmc_file = "../../run_data/run_15/Events/run_01/tag_1_pythia8_events.hepmc"
 
 pos_particle_pts = []
 pos_particle_etas = []
@@ -102,5 +102,5 @@ plt.savefig('Smuon_phi.png', bbox_inches='tight')
 # --- misc ---
 print(num_particles,'smuons generated')
 print(np.max(pTs),'max pT')
-print(eta_extrema,'max eta')
+print(eta_extrema,'eta extremum')
 print(np.sum(phis) / num_particles,'average phi')
