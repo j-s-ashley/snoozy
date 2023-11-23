@@ -66,7 +66,8 @@ etas = [pos_particle_etas, neg_particle_etas]
 eta_extrema = max( np.abs( np.min(etas) ), np.max(etas) ) 
 
 eta_bin_width = 1
-eta_num_bins = np.linspace(-eta_extrema, eta_extrema + eta_bin_width, eta_bin_width)
+#eta_num_bins = np.linspace(0 - eta_extrema, eta_extrema + eta_bin_width, eta_bin_width)
+eta_num_bins = np.linspace(-eta_extrema - eta_bin_width, eta_extrema + eta_bin_width, eta_bin_width)
 
 plt.hist(etas, bins=eta_num_bins, histtype='bar', label=tags, stacked=True, edgecolor='black')
 
@@ -84,9 +85,9 @@ plt.clf()
 # --- phi ---
 phis = [pos_particle_phis, neg_particle_phis]
 
-phi_bin_width = 1 
+#phi_bin_width = np.pi / 16 
 #phi_num_bins = np.linspace( -(np.pi), np.pi + phi_bin_width, phi_bin_width )
-phi_num_bins = np.linspace( -3.15, 3.15 + phi_bin_width, phi_bin_width )
+phi_num_bins = np.linspace( -np.pi, np.pi, 32 )
 
 plt.hist(phis, bins=phi_num_bins, histtype='bar', label=tags, stacked=True, edgecolor='black')
 
