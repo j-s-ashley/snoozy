@@ -16,19 +16,19 @@ neg_particle_phis = []
 def mev_to_gev(mev):				# pT values are in MeV,
 	return mev * 10**-3			    # converting to GeV
 
-def is_signal(parents, family, ancestor):
+def is_signal(parents, target, ancestor):
     for p in parents:
         if abs(p.id) == ancestor:
             return True
-        if abs(p.id) != family:
+        if abs(p.id) != target:
             continue
-        parents = p.production_vertex.particles_in
+        is_signal(p.production_vertex.particles_in, target, ancestor)
     return False
 
 num_particles = 0
 
-family = 13 # signal particle id
-ancestor = 2000013 # target parent id
+target = 13 # signal particle id
+ancestor = 2000013 # id of parent of signal particle
 
 with pyhepmc.open(hepmc_file) as f:
     for i, event in enumerate(f):
@@ -37,13 +37,13 @@ with pyhepmc.open(hepmc_file) as f:
         for particle in event.particles:
 
             # If the particle is a final-state muon, get parents
-            if abs(particle.pid) == family  and particle.status == 1:
-                flag = is_signal(particle.production_vertex.particles_in, family, ancestor)
+            if abs(particle.pid) == target  and particle.status == 1:
+                flag = is_signal(particle.production_vertex.particles_in, target, ancestor)
 
                 # If not signal, move on; else, pull data
                 if flag == False:
                     continue
-                if particle.pid == family:
+                if particle.pid == target:
                     num_particles += 1
                     p_pt = mev_to_gev( particle.momentum.pt() )
                     pos_particle_pts.append(p_pt)
@@ -51,7 +51,7 @@ with pyhepmc.open(hepmc_file) as f:
                     pos_particle_etas.append(p_eta)
                     p_phi = particle.momentum.phi()
                     pos_particle_phis.append(p_phi)
-                elif particle.pid == -family:
+                elif particle.pid == -target:
                     num_particles += 1
                     n_pt = mev_to_gev( particle.momentum.pt() )
                     neg_particle_pts.append(n_pt)
