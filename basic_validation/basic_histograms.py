@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Change run number
-hepmc_file = "../../run_data/run_15/Events/run_01/tag_1_pythia8_events.hepmc"
+hepmc_file = "../../run_data/run_17/Events/run_01/tag_1_pythia8_events.hepmc"
 
 pos_particle_pts = []
 pos_particle_etas = []
@@ -45,8 +45,7 @@ tags = ['Positively charged smuons', 'Negatively charged smuons']
 # --- pT ---
 pTs = [pos_particle_pts, neg_particle_pts]
 
-pT_bin_width = 125
-pT_num_bins = np.linspace(np.min(pTs), np.max(pTs) + pT_bin_width, pT_bin_width)
+pT_num_bins = np.linspace(0, 1500, 50)
 
 plt.hist(pTs, bins=pT_num_bins, histtype='bar', label=tags, stacked=True, edgecolor='black')
 
@@ -65,9 +64,7 @@ plt.clf()
 etas = [pos_particle_etas, neg_particle_etas]
 eta_extrema = max( np.abs( np.min(etas) ), np.max(etas) ) 
 
-#eta_bin_width = 1
-#eta_num_bins = np.linspace(0 - eta_extrema, eta_extrema + eta_bin_width, eta_bin_width)
-eta_num_bins = np.linspace(-eta_extrema, eta_extrema)
+eta_num_bins = np.linspace( -5, 5 )
 
 plt.hist(etas, bins=eta_num_bins, histtype='bar', label=tags, stacked=True, edgecolor='black')
 
