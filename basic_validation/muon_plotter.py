@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Change run number
-hepmc_file = "../../run_data/run_15/Events/run_01/tag_1_pythia8_events.hepmc"
+hepmc_file = "../../run_data/run_17/Events/run_01/tag_1_pythia8_events.hepmc"
 
 pos_particle_pts = []
 pos_particle_etas = []
@@ -13,38 +13,37 @@ neg_particle_pts = []
 neg_particle_etas = []
 neg_particle_phis = []
 
-def mev_to_gev(mev):				# pT values are in MeV,
-	return mev * 10**-3			    # converting to GeV
+target = 13                         # signal particle id
+desired_parent = 2000013            # id of parent of signal particle
 
-def get_final_muon_descendant(particle):
-    # Get the final state muon descendant of a given particle.
-    # Check if the particle itself is a final state muon
-    if particle.status == 1 and abs(particle.pid) == 13:
+# Get final state particles
+def get_signal(particle):
+    # Check if the particle itself is a signal particle
+    if particle.status == 1 and abs(particle.pid) == target:
         return particle
     # If the particle has an end vertex, check its descendants recursively
-    elif particle.end_vertex:
+    elif particle.end_vertex and abs(particle.pid) == target:
         for p in particle.end_vertex.particles_out:
-            final_muon = get_final_muon_descendant(p)
-            if final_muon is not None:
-                return final_muon
+            final_particle = get_signal(p)
+            if final_particle is not None:
+                return final_particle
     # If the particle is not a final state muon and does not have an end vertex, return None
     return None
 
-num_particles = 0
+def mev_to_gev(mev):				# pT values are in MeV,
+	return mev * 10**-3			    # converting to GeV
 
-target = 13 # signal particle id
-ancestor = 2000013 # id of parent of signal particle
+num_particles = 0
 
 with pyhepmc.open(hepmc_file) as f:
     for event in f:
         for particle in event.particles:
-            momentum = particle.momentum
-            pt = momentum.pt()
             # Check if the particle is a muon produced by a decaying 2000013 or -2000013
-            if abs(particle.pid) == 13 and particle.production_vertex and any(p.pid in [2000013, -2000013] for p in particle.production_vertex.particles_in):
+            # TODO This *can* be made a little more tidy. Eventually.
+            if abs(particle.pid) == target and particle.production_vertex and any(p.pid in [desired_parent, -desired_parent] for p in particle.production_vertex.particles_in):
                 # Get the final muon descendant of the muon
-                final_muon = get_final_muon_descendant(particle)
-                if final_muon is not None:
+                signal_particle = get_signal(particle)
+                if signal_particle is not None:
                     if particle.pid == target:
                         num_particles += 1
                         p_pt = mev_to_gev( particle.momentum.pt() )
