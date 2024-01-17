@@ -3,3 +3,7 @@ define q = g u c d s u~ c~ d~ s~ b t b~ t~ h01 h2 h3 h+ h-
 define p = g u c d s u~ c~ d~ s~ b b~
 generate p p > mur- mur+ /q
 output auto
+shell cp run_card.dat PROC_RPVMSSM_UFO_0/Cards/run_card.dat
+shell cp param_card.dat PROC_RPVMSSM_UFO_0/Cards/run_card.dat
+launch
+shower=Pythia8
