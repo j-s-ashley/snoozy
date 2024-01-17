@@ -2,7 +2,7 @@ import pyhepmc
 from particle import literals as lp
 import numpy as np
 
-hepmc_file = "../../run_data/run_18/Events/run_01/tag_1_pythia8_events.hepmc"
+hepmc_file = "../../run_data/run_15/Events/run_01/tag_1_pythia8_events.hepmc"
 
 with pyhepmc.open(hepmc_file) as f:
     for all_events in f:
